@@ -2,7 +2,6 @@ var Busboy = require('busboy')
 var chan = require('chan')
 var BlackHoleStream = require('black-hole-stream')
 
-var getDescriptor = Object.getOwnPropertyDescriptor
 var isArray = Array.isArray;
 
 module.exports = function (request, options) {
@@ -56,7 +55,7 @@ module.exports = function (request, options) {
   // i would just put everything in an array
   // but people will complain
   if (options.autoFields) {
-    var field = ch.field = {} // object lookup
+    var field = ch.field = Object.create(null) // object lookup
     var fields = ch.fields = [] // list lookup
   }
 
@@ -74,9 +73,6 @@ module.exports = function (request, options) {
 
     if (options.autoFields) {
       fields.push(args)
-
-      // don't overwrite prototypes
-      if (getDescriptor(Object.prototype, name)) return
 
       var prev = field[name]
       if (prev == null) return field[name] = val
